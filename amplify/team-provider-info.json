@@ -23,6 +23,9 @@
           "appId": "d2l87u7wphmoqr",
           "type": "manual"
         }
+      },
+      "storage": {
+        "gqls3": {}
       }
     }
   }

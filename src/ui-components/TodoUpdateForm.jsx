@@ -26,11 +26,13 @@ export default function TodoUpdateForm(props) {
   const initialValues = {
     name: "",
     description: "",
+    image: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
+  const [image, setImage] = React.useState(initialValues.image);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = todoRecord
@@ -38,6 +40,7 @@ export default function TodoUpdateForm(props) {
       : initialValues;
     setName(cleanValues.name);
     setDescription(cleanValues.description);
+    setImage(cleanValues.image);
     setErrors({});
   };
   const [todoRecord, setTodoRecord] = React.useState(todoModelProp);
@@ -59,6 +62,7 @@ export default function TodoUpdateForm(props) {
   const validations = {
     name: [{ type: "Required" }],
     description: [],
+    image: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -88,6 +92,7 @@ export default function TodoUpdateForm(props) {
         let modelFields = {
           name,
           description: description ?? null,
+          image: image ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -150,6 +155,7 @@ export default function TodoUpdateForm(props) {
             const modelFields = {
               name: value,
               description,
+              image,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -175,6 +181,7 @@ export default function TodoUpdateForm(props) {
             const modelFields = {
               name,
               description: value,
+              image,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -188,6 +195,32 @@ export default function TodoUpdateForm(props) {
         errorMessage={errors.description?.errorMessage}
         hasError={errors.description?.hasError}
         {...getOverrideProps(overrides, "description")}
+      ></TextField>
+      <TextField
+        label="Image"
+        isRequired={false}
+        isReadOnly={false}
+        value={image}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              image: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.image ?? value;
+          }
+          if (errors.image?.hasError) {
+            runValidationTasks("image", value);
+          }
+          setImage(value);
+        }}
+        onBlur={() => runValidationTasks("image", image)}
+        errorMessage={errors.image?.errorMessage}
+        hasError={errors.image?.hasError}
+        {...getOverrideProps(overrides, "image")}
       ></TextField>
       <Flex
         justifyContent="space-between"

@@ -10,8 +10,10 @@ export const createTodo = /* GraphQL */ `
       id
       name
       description
+      image
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -25,8 +27,10 @@ export const updateTodo = /* GraphQL */ `
       id
       name
       description
+      image
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -40,8 +44,10 @@ export const deleteTodo = /* GraphQL */ `
       id
       name
       description
+      image
       createdAt
       updatedAt
+      owner
       __typename
     }
   }

@@ -1,0 +1,14 @@
+{
+  "resourceName": "gqls3",
+  "policyUUID": "b4751691",
+  "bucketName": "reactamplified98a364bbd03e4f7bb9ea501a0c231f2c",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

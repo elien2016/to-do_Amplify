@@ -7,8 +7,10 @@ export const getTodo = /* GraphQL */ `
       id
       name
       description
+      image
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -24,8 +26,10 @@ export const listTodos = /* GraphQL */ `
         id
         name
         description
+        image
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
