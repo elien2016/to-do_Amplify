@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MdMenu, MdDeleteOutline } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 import { loadStripe } from '@stripe/stripe-js';
@@ -12,6 +13,8 @@ import {
   Image,
 } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
+
+import './custom.css';
 
 import { createTodoSubscription, createTodo } from './graphql/mutations';
 import { todoSubscriptionsByEmail, listTodos } from './graphql/queries';
@@ -146,9 +149,22 @@ const App = ({ signOut, user }) => {
   return (
     <div style={styles.container}>
       <Flex justifyContent="space-between" alignItems="center">
-        <Heading level={1}>Hello {user.username}</Heading>
-        <div onClick={toggleMenu}>
-          <MdMenu size="32px" />
+        <Heading level={1} className={`heading ${menuOpen ? 'open' : ''}`}>
+          Hello {user.username}
+        </Heading>
+        <div className="menu">
+          <div onClick={toggleMenu}>
+            <MdMenu size="32px" />
+          </div>
+          <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
+            <Link
+              to="/subscription"
+              onClick={() => setMenuOpen(false)}
+              style={styles.button}
+            >
+              Manage Subscription
+            </Link>
+          </div>
         </div>
       </Flex>
       <Button onClick={signOut}>Sign out</Button>
@@ -177,24 +193,35 @@ const App = ({ signOut, user }) => {
               </div>
             </Flex>
           )}
-          <label
-            htmlFor="todo-img-upload"
+          <button
             style={{
-              ...styles.button,
+              backgroundColor: 'black',
+              outline: 'none',
               marginBottom: '4px',
               textAlign: 'center',
+              padding: '0',
             }}
           >
-            {(selectedPhoto ? 'Change' : 'Add') + ' Photo'}
-          </label>
-          <input
-            type="file"
-            id="todo-img-upload"
-            name="todo-img-upload"
-            accept="image/*"
-            onChange={selectPhoto}
-            style={{ display: 'None' }}
-          />
+            <label
+              htmlFor="todo-img-upload"
+              style={{
+                color: 'white',
+                fontSize: '18px',
+                padding: '12px 0px',
+                display: 'block',
+              }}
+            >
+              {(selectedPhoto ? 'Change' : 'Add') + ' Photo'}
+            </label>
+            <input
+              type="file"
+              id="todo-img-upload"
+              name="todo-img-upload"
+              accept="image/*"
+              onChange={selectPhoto}
+              style={{ display: 'None' }}
+            />
+          </button>
         </>
       ) : (
         <button
