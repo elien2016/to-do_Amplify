@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MdDeleteOutline } from 'react-icons/md';
+import { MdMenu, MdDeleteOutline } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -14,7 +14,7 @@ import {
 import '@aws-amplify/ui-react/styles.css';
 
 import { createTodoSubscription, createTodo } from './graphql/mutations';
-import { listTodoSubscriptions, listTodos } from './graphql/queries';
+import { todoSubscriptionsByEmail, listTodos } from './graphql/queries';
 
 const initialState = { name: '', description: '' };
 
@@ -24,16 +24,22 @@ const App = ({ signOut, user }) => {
   const [selectedPhoto, setSelectedPhoto] = useState('');
   const [todoSubscription, setTodoSubscription] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  console.log(todoSubscription);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   async function fetchSubscriptions() {
     try {
       const subscriptionsData = await API.graphql(
-        graphqlOperation(listTodoSubscriptions)
+        graphqlOperation(todoSubscriptionsByEmail, {
+          email: user.attributes.email,
+        })
       );
-      const subscriptions = await Promise.all(
-        subscriptionsData.data.listTodoSubscriptions.items
-      );
-
+      const subscriptions =
+        subscriptionsData.data.todoSubscriptionsByEmail.items;
       if (subscriptions.length === 0) {
         const createTodoSubscriptionData = await API.graphql(
           graphqlOperation(createTodoSubscription, {
@@ -41,7 +47,7 @@ const App = ({ signOut, user }) => {
           })
         );
         setTodoSubscription(
-          createTodoSubscriptionData.data.createTodoSubscriptionData
+          createTodoSubscriptionData.data.createTodoSubscription
         );
       } else {
         setTodoSubscription(subscriptions[0]);
@@ -52,6 +58,25 @@ const App = ({ signOut, user }) => {
     }
   }
 
+  async function fetchTodos() {
+    // try {
+    //   const todoData = await API.graphql(graphqlOperation(listTodos));
+    //   const todos = await Promise.all(
+    //     todoData.data.listTodos.items.map(async (todo) => {
+    //       if (todo.image) {
+    //         todo.image = await Storage.get('images/' + todo.image, {
+    //           level: 'private',
+    //         });
+    //       }
+    //       return todo;
+    //     })
+    //   );
+    //   setTodos(todos);
+    // } catch (err) {
+    //   console.log('error fetching todos:', err);
+    // }
+  }
+
   useEffect(() => {
     fetchSubscriptions();
     fetchTodos();
@@ -59,25 +84,6 @@ const App = ({ signOut, user }) => {
 
   function setInput(key, value) {
     setFormState({ ...formState, [key]: value });
-  }
-
-  async function fetchTodos() {
-    try {
-      const todoData = await API.graphql(graphqlOperation(listTodos));
-      const todos = await Promise.all(
-        todoData.data.listTodos.items.map(async (todo) => {
-          if (todo.image) {
-            todo.image = await Storage.get('images/' + todo.image, {
-              level: 'private',
-            });
-          }
-          return todo;
-        })
-      );
-      setTodos(todos);
-    } catch (err) {
-      console.log('error fetching todos:', err);
-    }
   }
 
   async function addTodo() {
@@ -128,8 +134,9 @@ const App = ({ signOut, user }) => {
     const { error } = await stripe.redirectToCheckout({
       lineItems: [{ price: 'price_1O9f9tEgz1bDJ3oxqzbWtG7g', quantity: 1 }],
       mode: 'subscription',
-      successUrl: 'http://localhost:3000/',
-      cancelUrl: 'http://localhost:3000/',
+      successUrl: window.location.protocol + '//' + window.location.host,
+      cancelUrl: window.location.protocol + '//' + window.location.host,
+      customerEmail: user.attributes.email,
     });
     if (error) {
       console.log('error completing subscription:', error.message);
@@ -138,7 +145,12 @@ const App = ({ signOut, user }) => {
 
   return (
     <div style={styles.container}>
-      <Heading level={1}>Hello {user.username}</Heading>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Heading level={1}>Hello {user.username}</Heading>
+        <div onClick={toggleMenu}>
+          <MdMenu size="32px" />
+        </div>
+      </Flex>
       <Button onClick={signOut}>Sign out</Button>
       <h2>Todos</h2>
       <input

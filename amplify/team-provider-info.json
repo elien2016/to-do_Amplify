@@ -12,11 +12,24 @@
       "AmplifyAppId": "d2l87u7wphmoqr"
     },
     "categories": {
-      "api": {
-        "reactamplified": {}
-      },
-      "auth": {
-        "reactamplified1467e3aa": {}
+      "function": {
+        "reactamplified5bfb45d4": {
+          "secretsPathAmplifyAppId": "d2l87u7wphmoqr",
+          "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
+          "s3Key": "amplify-builds/reactamplified5bfb45d4-35516b51395338382f2b-build.zip"
+        },
+        "reactamplifiedGetTodosubscriptionByEmail": {
+          "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
+          "s3Key": "amplify-builds/reactamplifiedGetTodosubscriptionByEmail-2f7a466b2f4464532b37-build.zip"
+        },
+        "reactamplifiedUpdateTodosubscription": {
+          "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
+          "s3Key": "amplify-builds/reactamplifiedUpdateTodosubscription-725965364e7a7970654e-build.zip"
+        },
+        "reactamplifiedTodoSubscriptionsByEmail": {
+          "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
+          "s3Key": "amplify-builds/reactamplifiedTodoSubscriptionsByEmail-30515a375342504a4648-build.zip"
+        }
       },
       "hosting": {
         "amplifyhosting": {
@@ -24,8 +37,15 @@
           "type": "manual"
         }
       },
+      "auth": {
+        "reactamplified1467e3aa": {}
+      },
       "storage": {
         "gqls3": {}
+      },
+      "api": {
+        "reactamplified": {},
+        "stripeapi": {}
       }
     }
   }

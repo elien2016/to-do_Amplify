@@ -27,6 +27,20 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "AppSync"
+    },
+    "stripeapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "reactamplified5bfb45d4"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
     }
   },
   "auth": {
@@ -55,6 +69,81 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "reactamplified5bfb45d4": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "reactamplifiedGetTodosubscriptionByEmail"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "reactamplifiedUpdateTodosubscription"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "reactamplifiedTodoSubscriptionsByEmail"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "reactamplifiedGetTodosubscriptionByEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "reactamplified"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "reactamplifiedTodoSubscriptionsByEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "reactamplified"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "reactamplifiedUpdateTodosubscription": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "reactamplified"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "providerPlugin": "awscloudformation",
@@ -63,6 +152,78 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_reactamplified5bfb45d4_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplified5bfb45d4"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplified5bfb45d4_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplified5bfb45d4"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplified5bfb45d4_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplified5bfb45d4"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplifiedGetTodosubscriptionByEmail_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplifiedGetTodosubscriptionByEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplifiedGetTodosubscriptionByEmail_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplifiedGetTodosubscriptionByEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplifiedTodoSubscriptionsByEmail_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplifiedTodoSubscriptionsByEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplifiedTodoSubscriptionsByEmail_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplifiedTodoSubscriptionsByEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplifiedUpdateTodosubscription_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplifiedUpdateTodosubscription"
+        }
+      ]
+    },
+    "AMPLIFY_function_reactamplifiedUpdateTodosubscription_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reactamplifiedUpdateTodosubscription"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {

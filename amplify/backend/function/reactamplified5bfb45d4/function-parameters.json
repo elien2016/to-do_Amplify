@@ -1,0 +1,19 @@
+{
+  "lambdaLayers": [],
+  "secretNames": [
+    "stripe_key"
+  ],
+  "permissions": {
+    "function": {
+      "reactamplifiedGetTodosubscriptionByEmail": [
+        "read"
+      ],
+      "reactamplifiedUpdateTodosubscription": [
+        "read"
+      ],
+      "reactamplifiedTodoSubscriptionsByEmail": [
+        "read"
+      ]
+    }
+  }
+}

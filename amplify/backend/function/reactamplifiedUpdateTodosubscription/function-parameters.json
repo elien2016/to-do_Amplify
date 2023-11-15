@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "api": {
+      "reactamplified": [
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

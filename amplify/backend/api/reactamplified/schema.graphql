@@ -1,7 +1,21 @@
-type Todo @model @auth(rules: [{allow: owner}]) {
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+}
+
+type TodoSubscription
+  @model
+  @auth(rules: [{ allow: owner }, { allow: public, provider: iam }]) {
+  id: ID!
+  email: AWSEmail! @index
+  status: SubscriptionStatus!
+  from: AWSDate
+  to: AWSDate
+}
+
+type Todo @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   name: String!
   description: String
   image: String
 }
- 
