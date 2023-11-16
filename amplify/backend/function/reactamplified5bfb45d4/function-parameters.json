@@ -10,9 +10,6 @@
       ],
       "reactamplifiedUpdateTodosubscription": [
         "read"
-      ],
-      "reactamplifiedTodoSubscriptionsByEmail": [
-        "read"
       ]
     }
   }

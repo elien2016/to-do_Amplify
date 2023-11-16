@@ -1,7 +1,6 @@
 /* Amplify Params - DO NOT EDIT
 	ENV
 	FUNCTION_REACTAMPLIFIEDGETTODOSUBSCRIPTIONBYEMAIL_NAME
-	FUNCTION_REACTAMPLIFIEDTODOSUBSCRIPTIONSBYEMAIL_NAME
 	FUNCTION_REACTAMPLIFIEDUPDATETODOSUBSCRIPTION_NAME
 	REGION
 Amplify Params - DO NOT EDIT */ /* Amplify Params - DO NOT EDIT
@@ -114,7 +113,9 @@ app.post('/webhook', async function (req, res) {
           'arn:aws:lambda:us-west-1:143185212557:function:reactamplifiedUpdateTodosubscription-dev',
         Payload: JSON.stringify({
           id: subscription.id,
+          email: subscription.email,
           status: 'ACTIVE',
+          stripeId: req.body.data.object.subscription,
           from: startDateString,
           to: endDateString,
         }),
@@ -125,7 +126,9 @@ app.post('/webhook', async function (req, res) {
           'arn:aws:lambda:us-west-1:143185212557:function:reactamplifiedUpdateTodosubscription-dev',
         Payload: JSON.stringify({
           id: subscription.id,
+          email: subscription.email,
           status: 'INACTIVE',
+          stripeId: req.body.data.object.subscription,
           from: null,
           to: null,
         }),

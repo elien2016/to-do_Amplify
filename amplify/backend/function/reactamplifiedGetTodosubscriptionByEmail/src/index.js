@@ -23,6 +23,7 @@ const query = /* GraphQL */ `
         id
         email
         status
+        stripeId
         from
         to
       }

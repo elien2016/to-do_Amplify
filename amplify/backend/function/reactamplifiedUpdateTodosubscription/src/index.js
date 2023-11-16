@@ -22,6 +22,7 @@ const query = /* GraphQL */ `
       id
       email
       status
+      stripeId
       from
       to
     }
@@ -56,7 +57,9 @@ export const handler = async (event) => {
       variables: {
         input: {
           id: event.id,
+          email: event.email,
           status: event.status,
+          stripeId: event.stripeId,
           from: event.from,
           to: event.to,
         },

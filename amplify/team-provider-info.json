@@ -16,19 +16,15 @@
         "reactamplified5bfb45d4": {
           "secretsPathAmplifyAppId": "d2l87u7wphmoqr",
           "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
-          "s3Key": "amplify-builds/reactamplified5bfb45d4-35516b51395338382f2b-build.zip"
+          "s3Key": "amplify-builds/reactamplified5bfb45d4-48617773314e3261696e-build.zip"
         },
         "reactamplifiedGetTodosubscriptionByEmail": {
           "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
-          "s3Key": "amplify-builds/reactamplifiedGetTodosubscriptionByEmail-2f7a466b2f4464532b37-build.zip"
+          "s3Key": "amplify-builds/reactamplifiedGetTodosubscriptionByEmail-6b73696a63636e6c584b-build.zip"
         },
         "reactamplifiedUpdateTodosubscription": {
           "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
-          "s3Key": "amplify-builds/reactamplifiedUpdateTodosubscription-725965364e7a7970654e-build.zip"
-        },
-        "reactamplifiedTodoSubscriptionsByEmail": {
-          "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
-          "s3Key": "amplify-builds/reactamplifiedTodoSubscriptionsByEmail-30515a375342504a4648-build.zip"
+          "s3Key": "amplify-builds/reactamplifiedUpdateTodosubscription-374b576b61464d58644f-build.zip"
         }
       },
       "hosting": {

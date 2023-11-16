@@ -32,11 +32,13 @@ export default function TodoSubscriptionUpdateForm(props) {
   const initialValues = {
     email: "",
     status: "",
+    stripeId: "",
     from: "",
     to: "",
   };
   const [email, setEmail] = React.useState(initialValues.email);
   const [status, setStatus] = React.useState(initialValues.status);
+  const [stripeId, setStripeId] = React.useState(initialValues.stripeId);
   const [from, setFrom] = React.useState(initialValues.from);
   const [to, setTo] = React.useState(initialValues.to);
   const [errors, setErrors] = React.useState({});
@@ -46,6 +48,7 @@ export default function TodoSubscriptionUpdateForm(props) {
       : initialValues;
     setEmail(cleanValues.email);
     setStatus(cleanValues.status);
+    setStripeId(cleanValues.stripeId);
     setFrom(cleanValues.from);
     setTo(cleanValues.to);
     setErrors({});
@@ -71,6 +74,7 @@ export default function TodoSubscriptionUpdateForm(props) {
   const validations = {
     email: [{ type: "Required" }, { type: "Email" }],
     status: [{ type: "Required" }],
+    stripeId: [],
     from: [],
     to: [],
   };
@@ -102,6 +106,7 @@ export default function TodoSubscriptionUpdateForm(props) {
         let modelFields = {
           email,
           status,
+          stripeId: stripeId ?? null,
           from: from ?? null,
           to: to ?? null,
         };
@@ -166,6 +171,7 @@ export default function TodoSubscriptionUpdateForm(props) {
             const modelFields = {
               email: value,
               status,
+              stripeId,
               from,
               to,
             };
@@ -193,6 +199,7 @@ export default function TodoSubscriptionUpdateForm(props) {
             const modelFields = {
               email,
               status: value,
+              stripeId,
               from,
               to,
             };
@@ -221,6 +228,34 @@ export default function TodoSubscriptionUpdateForm(props) {
         ></option>
       </SelectField>
       <TextField
+        label="Stripe id"
+        isRequired={false}
+        isReadOnly={false}
+        value={stripeId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              email,
+              status,
+              stripeId: value,
+              from,
+              to,
+            };
+            const result = onChange(modelFields);
+            value = result?.stripeId ?? value;
+          }
+          if (errors.stripeId?.hasError) {
+            runValidationTasks("stripeId", value);
+          }
+          setStripeId(value);
+        }}
+        onBlur={() => runValidationTasks("stripeId", stripeId)}
+        errorMessage={errors.stripeId?.errorMessage}
+        hasError={errors.stripeId?.hasError}
+        {...getOverrideProps(overrides, "stripeId")}
+      ></TextField>
+      <TextField
         label="From"
         isRequired={false}
         isReadOnly={false}
@@ -232,6 +267,7 @@ export default function TodoSubscriptionUpdateForm(props) {
             const modelFields = {
               email,
               status,
+              stripeId,
               from: value,
               to,
             };
@@ -260,6 +296,7 @@ export default function TodoSubscriptionUpdateForm(props) {
             const modelFields = {
               email,
               status,
+              stripeId,
               from,
               to: value,
             };

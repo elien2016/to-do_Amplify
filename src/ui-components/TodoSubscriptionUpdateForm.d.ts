@@ -24,12 +24,14 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type TodoSubscriptionUpdateFormInputValues = {
     email?: string;
     status?: string;
+    stripeId?: string;
     from?: string;
     to?: string;
 };
 export declare type TodoSubscriptionUpdateFormValidationValues = {
     email?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
+    stripeId?: ValidationFunction<string>;
     from?: ValidationFunction<string>;
     to?: ValidationFunction<string>;
 };
@@ -38,6 +40,7 @@ export declare type TodoSubscriptionUpdateFormOverridesProps = {
     TodoSubscriptionUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<SelectFieldProps>;
+    stripeId?: PrimitiveOverrideProps<TextFieldProps>;
     from?: PrimitiveOverrideProps<TextFieldProps>;
     to?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;

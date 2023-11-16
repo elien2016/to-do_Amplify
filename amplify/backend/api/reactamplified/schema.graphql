@@ -9,6 +9,7 @@ type TodoSubscription
   id: ID!
   email: AWSEmail! @index
   status: SubscriptionStatus!
+  stripeId: String
   from: AWSDate
   to: AWSDate
 }

@@ -81,7 +81,18 @@ const App = ({ signOut, user }) => {
   }
 
   useEffect(() => {
-    fetchSubscriptions();
+    const state = window.history.state;
+
+    // Test
+    console.log(state);
+
+    if (state.usr?.subscription) {
+      setTodoSubscription(state.usr.subscription);
+      setIsSubscribed(state.usr.subscription.status == 'ACTIVE');
+    } else {
+      fetchSubscriptions();
+    }
+
     fetchTodos();
   }, []);
 
@@ -137,8 +148,8 @@ const App = ({ signOut, user }) => {
     const { error } = await stripe.redirectToCheckout({
       lineItems: [{ price: 'price_1O9f9tEgz1bDJ3oxqzbWtG7g', quantity: 1 }],
       mode: 'subscription',
-      successUrl: window.location.protocol + '//' + window.location.host,
-      cancelUrl: window.location.protocol + '//' + window.location.host,
+      successUrl: window.location.href,
+      cancelUrl: window.location.href,
       customerEmail: user.attributes.email,
     });
     if (error) {
@@ -159,7 +170,7 @@ const App = ({ signOut, user }) => {
           <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
             <Link
               to="/subscription"
-              state={{ subscription: todoSubscription, isSubscribed }}
+              state={{ subscription: todoSubscription }}
               onClick={() => setMenuOpen(false)}
               style={styles.button}
             >

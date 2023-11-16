@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MdArrowBackIosNew, MdMenu } from 'react-icons/md';
 import { loadStripe } from '@stripe/stripe-js';
 
-import { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import {
   withAuthenticator,
-  Button,
-  Heading,
   Flex,
-  Image,
+  Heading,
+  Text,
+  SwitchField,
 } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 
@@ -22,22 +22,15 @@ const Subscription = ({ signOut, user }) => {
   const [todoSubscription, setTodoSubscription] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isChecked, setIsChecked] = React.useState(true);
+  const [stripe, setStripe] = React.useState(null);
   console.log(todoSubscription);
-  console.log(window.history.state);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   async function fetchSubscriptions() {
-    // let { state } = useLocation();
-    // console.log(state, 'state!!!!!!!!!!!!');
-    // if (state.subscription) {
-    //   setTodoSubscription(state.subscription);
-    //   setIsSubscribed(state.isSubscribed);
-    //   return;
-    // }
-
     try {
       const subscriptionsData = await API.graphql(
         graphqlOperation(todoSubscriptionsByEmail, {
@@ -65,13 +58,27 @@ const Subscription = ({ signOut, user }) => {
   }
 
   useEffect(() => {
-    fetchSubscriptions();
+    const state = window.history.state;
+
+    // Test
+    console.log(state);
+
+    if (state.usr?.subscription) {
+      setTodoSubscription(state.usr.subscription);
+      setIsSubscribed(state.usr.subscription.status == 'ACTIVE');
+    } else {
+      fetchSubscriptions();
+    }
   }, []);
 
   async function subscribePhoto() {
-    const stripe = await loadStripe(
-      'pk_test_51O5HUgEgz1bDJ3oxz3RFiqn9rb1syosCDSa9fpst8m7KxxblDBZZeHszD0kM4LAGq6aOn5RncMqvnekY13REE7kz00EtJjgQGK'
-    );
+    if (!stripe) {
+      setStripe(
+        await loadStripe(
+          'pk_test_51O5HUgEgz1bDJ3oxz3RFiqn9rb1syosCDSa9fpst8m7KxxblDBZZeHszD0kM4LAGq6aOn5RncMqvnekY13REE7kz00EtJjgQGK'
+        )
+      );
+    }
     const { error } = await stripe.redirectToCheckout({
       lineItems: [{ price: 'price_1O9f9tEgz1bDJ3oxqzbWtG7g', quantity: 1 }],
       mode: 'subscription',
@@ -84,10 +91,37 @@ const Subscription = ({ signOut, user }) => {
     }
   }
 
+  async function toggleRenew(event) {
+    setIsChecked(event.target.checked);
+
+    if (!stripe) {
+      setStripe(
+        await loadStripe(
+          'pk_test_51O5HUgEgz1bDJ3oxz3RFiqn9rb1syosCDSa9fpst8m7KxxblDBZZeHszD0kM4LAGq6aOn5RncMqvnekY13REE7kz00EtJjgQGK'
+        )
+      );
+    }
+    if (event.target.checked) {
+      const subscription = await stripe.subscriptions.update(
+        todoSubscription.id,
+        {
+          cancel_at_period_end: false,
+        }
+      );
+    } else {
+      const subscription = await stripe.subscriptions.update(
+        todoSubscription.id,
+        {
+          cancel_at_period_end: true,
+        }
+      );
+    }
+  }
+
   return (
     <div style={styles.container}>
       <Flex justifyContent="space-between" alignItems="flex-start">
-        <Link to="/">
+        <Link to="/" state={{ subscription: todoSubscription }}>
           <MdArrowBackIosNew size="26px" style={{ marginTop: '11px' }} />
         </Link>
         <div className="menu">
@@ -106,16 +140,55 @@ const Subscription = ({ signOut, user }) => {
         </div>
       </Flex>
 
-      <button
-        style={{
-          ...styles.button,
-          marginBottom: '4px',
-          padding: '12px 0px',
-        }}
-        onClick={subscribePhoto}
+      <Flex
+        direction="column"
+        justifyContent="center"
+        style={{ height: '50vh' }}
       >
-        Subscribe
-      </button>
+        {isSubscribed ? (
+          <>
+            <Heading level={3}>Active</Heading>
+            <Flex justifyContent="space-between">
+              <div>
+                <Heading level={4}>from</Heading>
+                <Text fontSize="1.4em">{todoSubscription?.from}</Text>
+              </div>
+              <div>
+                <Heading level={4}>to</Heading>
+                <Text fontSize="1.4em">{todoSubscription?.to}</Text>
+              </div>
+            </Flex>
+            <div>
+              <Text
+                fontWeight={700}
+                style={{ display: 'inline', marginRight: '6px' }}
+              >
+                Auto-Renew
+              </Text>
+              <SwitchField
+                isChecked={isChecked}
+                isLabelHidden={true}
+                trackCheckedColor={'#00cc99'}
+                onChange={toggleRenew}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <Heading level={3}>Inactive</Heading>
+            <button
+              style={{
+                ...styles.button,
+                marginBottom: '4px',
+                padding: '12px 0px',
+              }}
+              onClick={subscribePhoto}
+            >
+              Subscribe
+            </button>
+          </>
+        )}
+      </Flex>
     </div>
   );
 };

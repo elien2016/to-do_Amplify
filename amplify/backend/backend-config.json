@@ -86,34 +86,12 @@
           ],
           "category": "function",
           "resourceName": "reactamplifiedUpdateTodosubscription"
-        },
-        {
-          "attributes": [
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "reactamplifiedTodoSubscriptionsByEmail"
         }
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
     "reactamplifiedGetTodosubscriptionByEmail": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ],
-          "category": "api",
-          "resourceName": "reactamplified"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "reactamplifiedTodoSubscriptionsByEmail": {
       "build": true,
       "dependsOn": [
         {
@@ -189,22 +167,6 @@
         {
           "category": "function",
           "resourceName": "reactamplifiedGetTodosubscriptionByEmail"
-        }
-      ]
-    },
-    "AMPLIFY_function_reactamplifiedTodoSubscriptionsByEmail_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "reactamplifiedTodoSubscriptionsByEmail"
-        }
-      ]
-    },
-    "AMPLIFY_function_reactamplifiedTodoSubscriptionsByEmail_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "reactamplifiedTodoSubscriptionsByEmail"
         }
       ]
     },

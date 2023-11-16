@@ -10,6 +10,7 @@ export const onCreateTodoSubscription = /* GraphQL */ `
       id
       email
       status
+      stripeId
       from
       to
       createdAt
@@ -28,6 +29,7 @@ export const onUpdateTodoSubscription = /* GraphQL */ `
       id
       email
       status
+      stripeId
       from
       to
       createdAt
@@ -46,6 +48,7 @@ export const onDeleteTodoSubscription = /* GraphQL */ `
       id
       email
       status
+      stripeId
       from
       to
       createdAt
