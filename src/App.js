@@ -148,17 +148,18 @@ const App = ({ signOut, user }) => {
 
   return (
     <div style={styles.container}>
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex justifyContent="space-between" alignItems="flex-start">
         <Heading level={1} className={`heading ${menuOpen ? 'open' : ''}`}>
           Hello {user.username}
         </Heading>
         <div className="menu">
-          <div onClick={toggleMenu}>
-            <MdMenu size="32px" />
+          <div onClick={toggleMenu} style={{ marginTop: '5px' }}>
+            <MdMenu size="38px" />
           </div>
           <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
             <Link
               to="/subscription"
+              state={{ subscription: todoSubscription, isSubscribed }}
               onClick={() => setMenuOpen(false)}
               style={styles.button}
             >
@@ -195,18 +196,15 @@ const App = ({ signOut, user }) => {
           )}
           <button
             style={{
-              backgroundColor: 'black',
-              outline: 'none',
+              ...styles.button,
               marginBottom: '4px',
-              textAlign: 'center',
               padding: '0',
             }}
           >
             <label
               htmlFor="todo-img-upload"
               style={{
-                color: 'white',
-                fontSize: '18px',
+                ...styles.button,
                 padding: '12px 0px',
                 display: 'block',
               }}
@@ -228,14 +226,17 @@ const App = ({ signOut, user }) => {
           style={{
             ...styles.button,
             marginBottom: '4px',
-            textAlign: 'center',
+            padding: '12px 0px',
           }}
           onClick={subscribePhoto}
         >
           Subscribe to Add Photo
         </button>
       )}
-      <button style={styles.button} onClick={addTodo}>
+      <button
+        style={{ ...styles.button, padding: '12px 0px' }}
+        onClick={addTodo}
+      >
         Create Todo
       </button>
       {todos.map((todo, index) => (
@@ -293,7 +294,6 @@ const styles = {
     color: 'white',
     outline: 'none',
     fontSize: 18,
-    padding: '12px 0px',
   },
 };
 
