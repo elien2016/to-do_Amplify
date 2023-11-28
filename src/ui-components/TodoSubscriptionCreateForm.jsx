@@ -11,6 +11,7 @@ import {
   Flex,
   Grid,
   SelectField,
+  SwitchField,
   TextField,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
@@ -33,12 +34,14 @@ export default function TodoSubscriptionCreateForm(props) {
     stripeId: "",
     from: "",
     to: "",
+    autoRenew: false,
   };
   const [email, setEmail] = React.useState(initialValues.email);
   const [status, setStatus] = React.useState(initialValues.status);
   const [stripeId, setStripeId] = React.useState(initialValues.stripeId);
   const [from, setFrom] = React.useState(initialValues.from);
   const [to, setTo] = React.useState(initialValues.to);
+  const [autoRenew, setAutoRenew] = React.useState(initialValues.autoRenew);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setEmail(initialValues.email);
@@ -46,6 +49,7 @@ export default function TodoSubscriptionCreateForm(props) {
     setStripeId(initialValues.stripeId);
     setFrom(initialValues.from);
     setTo(initialValues.to);
+    setAutoRenew(initialValues.autoRenew);
     setErrors({});
   };
   const validations = {
@@ -54,6 +58,7 @@ export default function TodoSubscriptionCreateForm(props) {
     stripeId: [],
     from: [],
     to: [],
+    autoRenew: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -86,6 +91,7 @@ export default function TodoSubscriptionCreateForm(props) {
           stripeId,
           from,
           to,
+          autoRenew,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -153,6 +159,7 @@ export default function TodoSubscriptionCreateForm(props) {
               stripeId,
               from,
               to,
+              autoRenew,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -181,6 +188,7 @@ export default function TodoSubscriptionCreateForm(props) {
               stripeId,
               from,
               to,
+              autoRenew,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -220,6 +228,7 @@ export default function TodoSubscriptionCreateForm(props) {
               stripeId: value,
               from,
               to,
+              autoRenew,
             };
             const result = onChange(modelFields);
             value = result?.stripeId ?? value;
@@ -249,6 +258,7 @@ export default function TodoSubscriptionCreateForm(props) {
               stripeId,
               from: value,
               to,
+              autoRenew,
             };
             const result = onChange(modelFields);
             value = result?.from ?? value;
@@ -278,6 +288,7 @@ export default function TodoSubscriptionCreateForm(props) {
               stripeId,
               from,
               to: value,
+              autoRenew,
             };
             const result = onChange(modelFields);
             value = result?.to ?? value;
@@ -292,6 +303,35 @@ export default function TodoSubscriptionCreateForm(props) {
         hasError={errors.to?.hasError}
         {...getOverrideProps(overrides, "to")}
       ></TextField>
+      <SwitchField
+        label="Auto renew"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={autoRenew}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              email,
+              status,
+              stripeId,
+              from,
+              to,
+              autoRenew: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.autoRenew ?? value;
+          }
+          if (errors.autoRenew?.hasError) {
+            runValidationTasks("autoRenew", value);
+          }
+          setAutoRenew(value);
+        }}
+        onBlur={() => runValidationTasks("autoRenew", autoRenew)}
+        errorMessage={errors.autoRenew?.errorMessage}
+        hasError={errors.autoRenew?.hasError}
+        {...getOverrideProps(overrides, "autoRenew")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

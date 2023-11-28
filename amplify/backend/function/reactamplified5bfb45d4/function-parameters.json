@@ -1,7 +1,8 @@
 {
   "lambdaLayers": [],
   "secretNames": [
-    "stripe_key"
+    "stripe_key",
+    "endpoint_secret"
   ],
   "permissions": {
     "function": {

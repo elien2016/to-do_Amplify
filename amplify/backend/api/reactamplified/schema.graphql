@@ -12,6 +12,7 @@ type TodoSubscription
   stripeId: String
   from: AWSDate
   to: AWSDate
+  autoRenew: Boolean
 }
 
 type Todo @model @auth(rules: [{ allow: owner }]) {

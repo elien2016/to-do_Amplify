@@ -13,6 +13,7 @@ export const onCreateTodoSubscription = /* GraphQL */ `
       stripeId
       from
       to
+      autoRenew
       createdAt
       updatedAt
       owner
@@ -32,6 +33,7 @@ export const onUpdateTodoSubscription = /* GraphQL */ `
       stripeId
       from
       to
+      autoRenew
       createdAt
       updatedAt
       owner
@@ -51,6 +53,7 @@ export const onDeleteTodoSubscription = /* GraphQL */ `
       stripeId
       from
       to
+      autoRenew
       createdAt
       updatedAt
       owner

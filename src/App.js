@@ -11,6 +11,7 @@ import {
   Heading,
   Flex,
   Image,
+  Loader,
 } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 
@@ -20,6 +21,7 @@ import { createTodoSubscription, createTodo } from './graphql/mutations';
 import { todoSubscriptionsByEmail, listTodos } from './graphql/queries';
 
 const initialState = { name: '', description: '' };
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const App = ({ signOut, user }) => {
   const [formState, setFormState] = useState(initialState);
@@ -28,13 +30,17 @@ const App = ({ signOut, user }) => {
   const [todoSubscription, setTodoSubscription] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isFetching, setIsFetching] = React.useState(false);
   console.log(todoSubscription);
+  console.log(user);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   async function fetchSubscriptions() {
+    setIsFetching(true);
+    await delay(3000);
     try {
       const subscriptionsData = await API.graphql(
         graphqlOperation(todoSubscriptionsByEmail, {
@@ -59,41 +65,32 @@ const App = ({ signOut, user }) => {
     } catch (err) {
       console.log('error fetching subscriptions:', err);
     }
+    setIsFetching(false);
   }
 
   async function fetchTodos() {
-    // try {
-    //   const todoData = await API.graphql(graphqlOperation(listTodos));
-    //   const todos = await Promise.all(
-    //     todoData.data.listTodos.items.map(async (todo) => {
-    //       if (todo.image) {
-    //         todo.image = await Storage.get('images/' + todo.image, {
-    //           level: 'private',
-    //         });
-    //       }
-    //       return todo;
-    //     })
-    //   );
-    //   setTodos(todos);
-    // } catch (err) {
-    //   console.log('error fetching todos:', err);
-    // }
+    try {
+      const todoData = await API.graphql(graphqlOperation(listTodos));
+      const todos = await Promise.all(
+        todoData.data.listTodos.items.map(async (todo) => {
+          if (todo.image) {
+            todo.image = await Storage.get('images/' + todo.image, {
+              level: 'private',
+            });
+          }
+          return todo;
+        })
+      );
+      setTodos(todos);
+    } catch (err) {
+      console.log('error fetching todos:', err);
+    }
   }
 
   useEffect(() => {
-    const state = window.history.state;
+    fetchSubscriptions();
 
-    // Test
-    console.log(state);
-
-    if (state.usr?.subscription) {
-      setTodoSubscription(state.usr.subscription);
-      setIsSubscribed(state.usr.subscription.status == 'ACTIVE');
-    } else {
-      fetchSubscriptions();
-    }
-
-    fetchTodos();
+    // fetchTodos();
   }, []);
 
   function setInput(key, value) {
@@ -193,7 +190,17 @@ const App = ({ signOut, user }) => {
         value={formState.description}
         placeholder="Description"
       />
-      {isSubscribed ? (
+      {isFetching ? (
+        <button
+          style={{
+            ...styles.button,
+            marginBottom: '4px',
+            padding: '12px 0px',
+          }}
+        >
+          <Loader />
+        </button>
+      ) : isSubscribed ? (
         <>
           {selectedPhoto && (
             <Flex justifyContent="space-between" alignItems="center" gap="1rem">

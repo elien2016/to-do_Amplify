@@ -13,7 +13,7 @@ import { default as fetch, Request } from 'node-fetch';
 
 const GRAPHQL_ENDPOINT =
   process.env.API_REACTAMPLIFIED_GRAPHQLAPIENDPOINTOUTPUT;
-const AWS_REGION = process.env.AWS_REGION || 'us-west-1';
+const AWS_REGION = process.env.REGION || 'us-west-1';
 const { Sha256 } = crypto;
 
 const query = /* GraphQL */ `
@@ -26,6 +26,7 @@ const query = /* GraphQL */ `
         stripeId
         from
         to
+        autoRenew
       }
     }
   }
@@ -90,6 +91,6 @@ export const handler = async (event) => {
     //   "Access-Control-Allow-Origin": "*",
     //   "Access-Control-Allow-Headers": "*"
     // },
-    body: JSON.stringify(body.data.todoSubscriptionsByEmail.items),
+    body: JSON.stringify(body.data.todoSubscriptionsByEmail?.items),
   };
 };

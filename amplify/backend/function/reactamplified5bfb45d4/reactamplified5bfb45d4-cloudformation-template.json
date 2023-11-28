@@ -108,6 +108,28 @@
             },
             "FUNCTION_REACTAMPLIFIEDUPDATETODOSUBSCRIPTION_NAME": {
               "Ref": "functionreactamplifiedUpdateTodosubscriptionName"
+            },
+            "endpoint_secret": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Sub": [
+                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
+                      {
+                        "appId": {
+                          "Ref": "secretsPathAmplifyAppId"
+                        },
+                        "env": {
+                          "Ref": "env"
+                        },
+                        "functionName": "reactamplified5bfb45d4"
+                      }
+                    ]
+                  },
+                  "endpoint_secret"
+                ]
+              ]
             }
           }
         },

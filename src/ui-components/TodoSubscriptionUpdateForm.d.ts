@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -27,6 +27,7 @@ export declare type TodoSubscriptionUpdateFormInputValues = {
     stripeId?: string;
     from?: string;
     to?: string;
+    autoRenew?: boolean;
 };
 export declare type TodoSubscriptionUpdateFormValidationValues = {
     email?: ValidationFunction<string>;
@@ -34,6 +35,7 @@ export declare type TodoSubscriptionUpdateFormValidationValues = {
     stripeId?: ValidationFunction<string>;
     from?: ValidationFunction<string>;
     to?: ValidationFunction<string>;
+    autoRenew?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TodoSubscriptionUpdateFormOverridesProps = {
@@ -43,6 +45,7 @@ export declare type TodoSubscriptionUpdateFormOverridesProps = {
     stripeId?: PrimitiveOverrideProps<TextFieldProps>;
     from?: PrimitiveOverrideProps<TextFieldProps>;
     to?: PrimitiveOverrideProps<TextFieldProps>;
+    autoRenew?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type TodoSubscriptionUpdateFormProps = React.PropsWithChildren<{
     overrides?: TodoSubscriptionUpdateFormOverridesProps | undefined | null;

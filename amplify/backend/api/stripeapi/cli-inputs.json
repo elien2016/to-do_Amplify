@@ -7,6 +7,16 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/update-subscription": {
+      "name": "/update-subscription",
+      "lambdaFunction": "reactamplified5bfb45d4",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create"
+        ]
+      }
     }
   }
 }
