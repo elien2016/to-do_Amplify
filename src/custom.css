@@ -1,11 +1,53 @@
-.menu {
+.container {
+  width: 400px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+}
+
+.input {
+  border: none;
+  background-color: #ddd;
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 18px;
+}
+
+.button {
+  background-color: black;
+  color: white;
+  outline: none;
+  font-size: 18px;
+}
+
+.todo {
+  margin-bottom: 15px;
+}
+
+.todo-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.todo-description {
+  margin-bottom: 0;
+}
+
+.todo-description-with-image {
+  max-width: 280px;
+  overflow-wrap: break-word;
 }
 
 .heading.open {
   flex-basis: min-content;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .menu-items {

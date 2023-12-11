@@ -36,18 +36,15 @@ const AWS_REGION = process.env.REGION || 'us-west-1';
 
 // declare a new express app
 const app = express();
-// app.use(
-//   bodyParser.json({
-//     verify: function (res, req, buf) {
-//       req.rawBody = buf.toString();
-//     },
-//   })
-// );
 app.use((req, res, next) => {
   if (req.originalUrl === '/webhook') {
     next();
   } else {
-    bodyParser.json()(req, res, next);
+    bodyParser.json({
+      verify: function (res, req, buf) {
+        req.rawBody = buf.toString();
+      },
+    })(req, res, next);
   }
 });
 app.use(awsServerlessExpressMiddleware.eventContext());

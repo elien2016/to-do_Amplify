@@ -16,21 +16,21 @@ import {
 import '@aws-amplify/ui-react/styles.css';
 
 import './custom.css';
+import { delay } from './Utils';
 
 import { createTodoSubscription, createTodo } from './graphql/mutations';
 import { todoSubscriptionsByEmail, listTodos } from './graphql/queries';
 
 const initialState = { name: '', description: '' };
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const App = ({ signOut, user }) => {
   const [formState, setFormState] = useState(initialState);
   const [todos, setTodos] = useState([]);
   const [selectedPhoto, setSelectedPhoto] = useState('');
-  const [todoSubscription, setTodoSubscription] = useState(null);
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isFetching, setIsFetching] = React.useState(false);
+
+  const [todoSubscription, setTodoSubscription] = useState(null);
+
   console.log(todoSubscription);
   console.log(user);
 
@@ -39,20 +39,23 @@ const App = ({ signOut, user }) => {
   };
 
   async function fetchSubscriptions() {
-    setIsFetching(true);
-    await delay(3000);
+    await delay(3500);
+
     try {
+      const userEmail = user.attributes.email;
       const subscriptionsData = await API.graphql(
         graphqlOperation(todoSubscriptionsByEmail, {
-          email: user.attributes.email,
+          email: userEmail,
         })
       );
       const subscriptions =
         subscriptionsData.data.todoSubscriptionsByEmail.items;
+      console.log(subscriptions);
+
       if (subscriptions.length === 0) {
         const createTodoSubscriptionData = await API.graphql(
           graphqlOperation(createTodoSubscription, {
-            input: { email: user.attributes.email, status: 'INACTIVE' },
+            input: { email: userEmail, status: 'INACTIVE' },
           })
         );
         setTodoSubscription(
@@ -60,12 +63,10 @@ const App = ({ signOut, user }) => {
         );
       } else {
         setTodoSubscription(subscriptions[0]);
-        setIsSubscribed(subscriptions[0].status === 'ACTIVE');
       }
     } catch (err) {
       console.log('error fetching subscriptions:', err);
     }
-    setIsFetching(false);
   }
 
   async function fetchTodos() {
@@ -81,6 +82,7 @@ const App = ({ signOut, user }) => {
           return todo;
         })
       );
+
       setTodos(todos);
     } catch (err) {
       console.log('error fetching todos:', err);
@@ -89,7 +91,6 @@ const App = ({ signOut, user }) => {
 
   useEffect(() => {
     fetchSubscriptions();
-
     // fetchTodos();
   }, []);
 
@@ -110,7 +111,7 @@ const App = ({ signOut, user }) => {
       setFormState(initialState);
       const fileName = `${uuidv4()}_${selectedPhoto.name}`;
       await Storage.put(fileName, selectedPhoto, {
-        contentType: selectedPhoto.type ? selectedPhoto.type : 'image',
+        contentType: selectedPhoto.type || 'image',
         level: 'private',
       });
       setSelectedPhoto('');
@@ -139,11 +140,12 @@ const App = ({ signOut, user }) => {
   }
 
   async function subscribePhoto() {
-    const stripe = await loadStripe(
-      'pk_test_51O5HUgEgz1bDJ3oxz3RFiqn9rb1syosCDSa9fpst8m7KxxblDBZZeHszD0kM4LAGq6aOn5RncMqvnekY13REE7kz00EtJjgQGK'
-    );
+    const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUB_KEY);
+
     const { error } = await stripe.redirectToCheckout({
-      lineItems: [{ price: 'price_1O9f9tEgz1bDJ3oxqzbWtG7g', quantity: 1 }],
+      lineItems: [
+        { price: process.env.REACT_APP_STRIPE_SUBSCRIPTION_ITEM, quantity: 1 },
+      ],
       mode: 'subscription',
       successUrl: window.location.href,
       cancelUrl: window.location.href,
@@ -155,7 +157,7 @@ const App = ({ signOut, user }) => {
   }
 
   return (
-    <div style={styles.container}>
+    <div className="container">
       <Flex justifyContent="space-between" alignItems="flex-start">
         <Heading level={1} className={`heading ${menuOpen ? 'open' : ''}`}>
           Hello {user.username}
@@ -167,9 +169,8 @@ const App = ({ signOut, user }) => {
           <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
             <Link
               to="/subscription"
-              state={{ subscription: todoSubscription }}
               onClick={() => setMenuOpen(false)}
-              style={styles.button}
+              className="button"
             >
               Manage Subscription
             </Link>
@@ -180,27 +181,27 @@ const App = ({ signOut, user }) => {
       <h2>Todos</h2>
       <input
         onChange={(event) => setInput('name', event.target.value)}
-        style={styles.input}
+        className="input"
         value={formState.name}
         placeholder="Title"
       />
       <input
         onChange={(event) => setInput('description', event.target.value)}
-        style={styles.input}
+        className="input"
         value={formState.description}
         placeholder="Description"
       />
-      {isFetching ? (
+      {!todoSubscription ? (
         <button
+          className="button"
           style={{
-            ...styles.button,
             marginBottom: '4px',
             padding: '12px 0px',
           }}
         >
           <Loader />
         </button>
-      ) : isSubscribed ? (
+      ) : todoSubscription.status === 'ACTIVE' ? (
         <>
           {selectedPhoto && (
             <Flex justifyContent="space-between" alignItems="center" gap="1rem">
@@ -213,16 +214,16 @@ const App = ({ signOut, user }) => {
             </Flex>
           )}
           <button
+            className="button"
             style={{
-              ...styles.button,
               marginBottom: '4px',
               padding: '0',
             }}
           >
             <label
               htmlFor="todo-img-upload"
+              className="button"
               style={{
-                ...styles.button,
                 padding: '12px 0px',
                 display: 'block',
               }}
@@ -241,8 +242,8 @@ const App = ({ signOut, user }) => {
         </>
       ) : (
         <button
+          className="button"
           style={{
-            ...styles.button,
             marginBottom: '4px',
             padding: '12px 0px',
           }}
@@ -252,25 +253,20 @@ const App = ({ signOut, user }) => {
         </button>
       )}
       <button
-        style={{ ...styles.button, padding: '12px 0px' }}
+        className="button"
+        style={{ padding: '12px 0px' }}
         onClick={addTodo}
       >
         Create Todo
       </button>
       {todos.map((todo, index) => (
-        <div key={todo.id ? todo.id : index} style={styles.todo}>
-          <p style={styles.todoName}>{todo.name}</p>
+        <div className="todo" key={todo.id || index}>
+          <p className="todo-name">{todo.name}</p>
           <Flex justifyContent="space-between" alignItems="center" gap="1rem">
             <p
-              style={
-                todo.image
-                  ? {
-                      ...styles.todoDescription,
-                      maxWidth: '280px',
-                      overflowWrap: 'break-word',
-                    }
-                  : styles.todoDescription
-              }
+              className={`todo-description ${
+                todo.image ? 'todo-description-with-image' : ''
+              }`}
             >
               {todo.description}
             </p>
@@ -286,33 +282,6 @@ const App = ({ signOut, user }) => {
       ))}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    width: 400,
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  todo: { marginBottom: 15 },
-  input: {
-    border: 'none',
-    backgroundColor: '#ddd',
-    marginBottom: 10,
-    padding: 8,
-    fontSize: 18,
-  },
-  todoName: { fontSize: 20, fontWeight: 'bold' },
-  todoDescription: { marginBottom: 0 },
-  button: {
-    backgroundColor: 'black',
-    color: 'white',
-    outline: 'none',
-    fontSize: 18,
-  },
 };
 
 export default withAuthenticator(App);
