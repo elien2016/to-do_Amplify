@@ -35,9 +35,6 @@ const App = ({ signOut, user }) => {
 
   const dispatch = useDispatch();
 
-  console.log(todoSubscription);
-  console.log(user);
-
   useEffect(() => {
     dispatch(fetchSubscription(user.attributes.email));
     dispatch(fetchTodoList());
@@ -48,7 +45,6 @@ const App = ({ signOut, user }) => {
   }
 
   function selectPhoto(event) {
-    console.log('checkpoint');
     const file = event.target.files[0];
 
     if (!file) return;

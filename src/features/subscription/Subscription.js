@@ -28,8 +28,6 @@ const Subscription = ({ user }) => {
 
   const dispatch = useDispatch();
 
-  console.log(todoSubscription);
-
   useEffect(() => {
     dispatch(fetchSubscription(user.attributes.email));
   }, []);
@@ -51,7 +49,6 @@ const Subscription = ({ user }) => {
 
     try {
       const res = await API.post(apiName, path, params);
-      console.log('autoRenew: ', res);
 
       if (res.error) {
         console.log(res.error);

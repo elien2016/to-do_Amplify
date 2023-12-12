@@ -32,7 +32,6 @@ export const fetchSubscription = (email) => async (dispatch) => {
       variables: { email },
     });
     const subscriptions = subscriptionsData.data.todoSubscriptionsByEmail.items;
-    console.log(subscriptions);
 
     if (subscriptions.length === 0) {
       const createTodoSubscriptionData = await API.graphql({

@@ -36,7 +36,6 @@ export const fetchTodoList = () => async (dispatch) => {
       })
     );
 
-    console.log(todos);
     dispatch({ type: 'todoList/todoListFetched', payload: todos });
   } catch (err) {
     console.log('error fetching todos:', err);
