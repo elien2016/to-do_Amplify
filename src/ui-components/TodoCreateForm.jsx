@@ -25,23 +25,31 @@ export default function TodoCreateForm(props) {
     name: "",
     description: "",
     image: "",
+    type: "",
+    createdAt: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
   const [image, setImage] = React.useState(initialValues.image);
+  const [type, setType] = React.useState(initialValues.type);
+  const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setDescription(initialValues.description);
     setImage(initialValues.image);
+    setType(initialValues.type);
+    setCreatedAt(initialValues.createdAt);
     setErrors({});
   };
   const validations = {
     name: [{ type: "Required" }],
     description: [],
     image: [],
+    type: [{ type: "Required" }],
+    createdAt: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -72,6 +80,8 @@ export default function TodoCreateForm(props) {
           name,
           description,
           image,
+          type,
+          createdAt,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -137,6 +147,8 @@ export default function TodoCreateForm(props) {
               name: value,
               description,
               image,
+              type,
+              createdAt,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -163,6 +175,8 @@ export default function TodoCreateForm(props) {
               name,
               description: value,
               image,
+              type,
+              createdAt,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -189,6 +203,8 @@ export default function TodoCreateForm(props) {
               name,
               description,
               image: value,
+              type,
+              createdAt,
             };
             const result = onChange(modelFields);
             value = result?.image ?? value;
@@ -202,6 +218,62 @@ export default function TodoCreateForm(props) {
         errorMessage={errors.image?.errorMessage}
         hasError={errors.image?.hasError}
         {...getOverrideProps(overrides, "image")}
+      ></TextField>
+      <TextField
+        label="Type"
+        isRequired={true}
+        isReadOnly={false}
+        value={type}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              image,
+              type: value,
+              createdAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.type ?? value;
+          }
+          if (errors.type?.hasError) {
+            runValidationTasks("type", value);
+          }
+          setType(value);
+        }}
+        onBlur={() => runValidationTasks("type", type)}
+        errorMessage={errors.type?.errorMessage}
+        hasError={errors.type?.hasError}
+        {...getOverrideProps(overrides, "type")}
+      ></TextField>
+      <TextField
+        label="Created at"
+        isRequired={true}
+        isReadOnly={false}
+        value={createdAt}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              image,
+              type,
+              createdAt: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.createdAt ?? value;
+          }
+          if (errors.createdAt?.hasError) {
+            runValidationTasks("createdAt", value);
+          }
+          setCreatedAt(value);
+        }}
+        onBlur={() => runValidationTasks("createdAt", createdAt)}
+        errorMessage={errors.createdAt?.errorMessage}
+        hasError={errors.createdAt?.hasError}
+        {...getOverrideProps(overrides, "createdAt")}
       ></TextField>
       <Flex
         justifyContent="space-between"

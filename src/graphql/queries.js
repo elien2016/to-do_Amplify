@@ -87,6 +87,7 @@ export const getTodo = /* GraphQL */ `
       name
       description
       image
+      type
       createdAt
       updatedAt
       owner
@@ -106,6 +107,40 @@ export const listTodos = /* GraphQL */ `
         name
         description
         image
+        type
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const todosByDate = /* GraphQL */ `
+  query TodosByDate(
+    $type: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelTodoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    todosByDate(
+      type: $type
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        description
+        image
+        type
         createdAt
         updatedAt
         owner

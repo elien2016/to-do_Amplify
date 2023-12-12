@@ -25,11 +25,15 @@ export declare type TodoUpdateFormInputValues = {
     name?: string;
     description?: string;
     image?: string;
+    type?: string;
+    createdAt?: string;
 };
 export declare type TodoUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
     image?: ValidationFunction<string>;
+    type?: ValidationFunction<string>;
+    createdAt?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TodoUpdateFormOverridesProps = {
@@ -37,6 +41,8 @@ export declare type TodoUpdateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextFieldProps>;
     image?: PrimitiveOverrideProps<TextFieldProps>;
+    type?: PrimitiveOverrideProps<TextFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type TodoUpdateFormProps = React.PropsWithChildren<{
     overrides?: TodoUpdateFormOverridesProps | undefined | null;

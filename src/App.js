@@ -37,7 +37,6 @@ const App = ({ signOut, user }) => {
 
   console.log(todoSubscription);
   console.log(user);
-  console.log('photo:', selectedPhoto);
 
   useEffect(() => {
     dispatch(fetchSubscription(user.attributes.email));
@@ -85,7 +84,7 @@ const App = ({ signOut, user }) => {
       dispatch({ type: 'todoList/todoAdded', payload: todo });
       API.graphql({
         query: mutations.createTodo,
-        variables: { input: { ...formState, image: fileName } },
+        variables: { input: { ...formState, type: 'Todo', image: fileName } },
       });
     } catch (err) {
       console.log('error creating todo:', err);

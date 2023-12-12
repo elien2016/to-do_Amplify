@@ -12,7 +12,7 @@ export const todoListSlice = createSlice({
       return action.payload;
     },
     todoAdded(state, action) {
-      return [...state, action.payload];
+      return [action.payload, ...state];
     },
   },
 });
@@ -21,9 +21,12 @@ export const { todoListFetched } = todoListSlice.actions;
 
 export const fetchTodoList = () => async (dispatch) => {
   try {
-    const todoData = await API.graphql({ query: queries.listTodos });
+    const todoData = await API.graphql({
+      query: queries.todosByDate,
+      variables: { type: 'Todo', sortDirection: 'DESC' },
+    });
     const todos = await Promise.all(
-      todoData.data.listTodos.items.map(async (todo) => {
+      todoData.data.todosByDate.items.map(async (todo) => {
         if (todo.image) {
           todo.image = await Storage.get('images/' + todo.image, {
             level: 'private',

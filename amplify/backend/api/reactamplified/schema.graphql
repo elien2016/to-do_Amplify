@@ -20,4 +20,11 @@ type Todo @model @auth(rules: [{ allow: owner }]) {
   name: String!
   description: String
   image: String
+  type: String!
+    @index(
+      name: "todosByDate"
+      queryField: "todosByDate"
+      sortKeyFields: ["createdAt"]
+    )
+  createdAt: String!
 }

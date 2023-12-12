@@ -71,6 +71,7 @@ export const createTodo = /* GraphQL */ `
       name
       description
       image
+      type
       createdAt
       updatedAt
       owner
@@ -88,6 +89,7 @@ export const updateTodo = /* GraphQL */ `
       name
       description
       image
+      type
       createdAt
       updatedAt
       owner
@@ -105,6 +107,7 @@ export const deleteTodo = /* GraphQL */ `
       name
       description
       image
+      type
       createdAt
       updatedAt
       owner
