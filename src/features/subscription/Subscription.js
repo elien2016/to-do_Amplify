@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MdArrowBackIosNew, MdMenu } from 'react-icons/md';
-import { loadStripe } from '@stripe/stripe-js';
 
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import {
   withAuthenticator,
   Flex,
@@ -15,81 +15,27 @@ import {
 } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 
-import './custom.css';
-import { delay } from './Utils';
+import '../../custom.css';
+import { subscribePhoto } from '../../Utils';
 
-import { createTodoSubscription } from './graphql/mutations';
-import { todoSubscriptionsByEmail } from './graphql/queries';
+import { fetchSubscription } from './subscriptionSlice';
 
 const Subscription = ({ user }) => {
-  const [isChecked, setIsChecked] = React.useState(true);
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [todoSubscription, setTodoSubscription] = useState(null);
+  const todoSubscription = useSelector((state) => state.subscription);
+
+  const dispatch = useDispatch();
 
   console.log(todoSubscription);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  async function fetchSubscriptions() {
-    await delay(3000);
-
-    try {
-      const userEmail = user.attributes.email;
-      const subscriptionsData = await API.graphql(
-        graphqlOperation(todoSubscriptionsByEmail, {
-          email: userEmail,
-        })
-      );
-      const subscriptions =
-        subscriptionsData.data.todoSubscriptionsByEmail.items;
-      console.log(subscriptions);
-
-      if (subscriptions.length === 0) {
-        const createTodoSubscriptionData = await API.graphql(
-          graphqlOperation(createTodoSubscription, {
-            input: { email: userEmail, status: 'INACTIVE' },
-          })
-        );
-        setTodoSubscription(
-          createTodoSubscriptionData.data.createTodoSubscription
-        );
-      } else {
-        setTodoSubscription(subscriptions[0]);
-        setIsChecked(subscriptions[0].autoRenew === true);
-      }
-    } catch (err) {
-      console.log('error fetching subscriptions:', err);
-    }
-  }
-
   useEffect(() => {
-    fetchSubscriptions();
+    dispatch(fetchSubscription(user.attributes.email));
   }, []);
-
-  async function subscribePhoto() {
-    const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUB_KEY);
-
-    const { error } = await stripe.redirectToCheckout({
-      lineItems: [
-        { price: process.env.REACT_APP_STRIPE_SUBSCRIPTION_ITEM, quantity: 1 },
-      ],
-      mode: 'subscription',
-      successUrl: window.location.href,
-      cancelUrl: window.location.href,
-      customerEmail: user.attributes.email,
-    });
-    if (error) {
-      console.log('error completing subscription:', error.message);
-    }
-  }
 
   async function toggleRenew(event) {
     setIsProcessing(true);
-    setIsChecked(event.target.checked);
 
     const apiName = 'stripeapi';
     const path = '/update-subscription';
@@ -111,9 +57,9 @@ const Subscription = ({ user }) => {
         console.log(res.error);
         alert('Error');
       } else {
-        setTodoSubscription({
-          ...todoSubscription,
-          autoRenew: event.target.checked,
+        dispatch({
+          type: 'subscription/autoRenewUpdated',
+          payload: event.target.checked,
         });
         alert('Success');
       }
@@ -132,7 +78,10 @@ const Subscription = ({ user }) => {
           <MdArrowBackIosNew size="26px" style={{ marginTop: '11px' }} />
         </Link>
         <div className="menu">
-          <div onClick={toggleMenu} style={{ marginTop: '5px' }}>
+          <div
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{ marginTop: '5px' }}
+          >
             <MdMenu size="38px" />
           </div>
           <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
@@ -178,7 +127,7 @@ const Subscription = ({ user }) => {
                 <Loader />
               ) : (
                 <SwitchField
-                  isChecked={isChecked}
+                  isChecked={todoSubscription?.autoRenew}
                   isLabelHidden={true}
                   trackCheckedColor={'#00cc99'}
                   onChange={toggleRenew}
@@ -195,7 +144,7 @@ const Subscription = ({ user }) => {
                 marginBottom: '4px',
                 padding: '12px 0px',
               }}
-              onClick={subscribePhoto}
+              onClick={() => subscribePhoto(user.attributes.email)}
             >
               Subscribe
             </button>

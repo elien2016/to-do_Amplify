@@ -4,8 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import './index.css';
 import App from './App';
-import Subscription from './Subscription';
+import Subscription from './features/subscription/Subscription';
 import reportWebVitals from './reportWebVitals';
+
+import { Provider } from 'react-redux';
+import store from './app/store';
 
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
@@ -24,7 +27,11 @@ const router = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<RouterProvider router={router} />);
+root.render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
