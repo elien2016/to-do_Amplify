@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 
 import { delay } from '../../Utils';
 
-import { createTodoSubscription } from '../../graphql/mutations';
-import { todoSubscriptionsByEmail } from '../../graphql/queries';
+import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
 
 export const subscriptionSlice = createSlice({
   name: 'subscription',
@@ -27,20 +27,18 @@ export const fetchSubscription = (email) => async (dispatch) => {
   await delay(3000);
 
   try {
-    const subscriptionsData = await API.graphql(
-      graphqlOperation(todoSubscriptionsByEmail, {
-        email,
-      })
-    );
+    const subscriptionsData = await API.graphql({
+      query: queries.todoSubscriptionsByEmail,
+      variables: { email },
+    });
     const subscriptions = subscriptionsData.data.todoSubscriptionsByEmail.items;
     console.log(subscriptions);
 
     if (subscriptions.length === 0) {
-      const createTodoSubscriptionData = await API.graphql(
-        graphqlOperation(createTodoSubscription, {
-          input: { email, status: 'INACTIVE' },
-        })
-      );
+      const createTodoSubscriptionData = await API.graphql({
+        query: mutations.createTodoSubscription,
+        variables: { input: { email, status: 'INACTIVE' } },
+      });
       dispatch({
         type: 'subscription/subscriptionFetched',
         payload: createTodoSubscriptionData.data.createTodoSubscription,

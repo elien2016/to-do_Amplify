@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { MdMenu, MdDeleteOutline } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 
-import { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 import {
   withAuthenticator,
   Button,
@@ -18,7 +18,7 @@ import '@aws-amplify/ui-react/styles.css';
 import './custom.css';
 import { subscribePhoto } from './Utils';
 
-import { createTodo } from './graphql/mutations';
+import * as mutations from './graphql/mutations';
 
 import { fetchSubscription } from './features/subscription/subscriptionSlice';
 import { fetchTodoList } from './features/todoList/todoListSlice';
@@ -75,7 +75,7 @@ const App = ({ signOut, user }) => {
           contentType: selectedPhoto.type || 'image',
           level: 'private',
         });
-        setSelectedPhoto('');
+        setSelectedPhoto(null);
 
         todo.image = await Storage.get('images/' + fileName, {
           level: 'private',
@@ -83,11 +83,10 @@ const App = ({ signOut, user }) => {
       }
 
       dispatch({ type: 'todoList/todoAdded', payload: todo });
-      API.graphql(
-        graphqlOperation(createTodo, {
-          input: { ...formState, image: fileName },
-        })
-      );
+      API.graphql({
+        query: mutations.createTodo,
+        variables: { input: { ...formState, image: fileName } },
+      });
     } catch (err) {
       console.log('error creating todo:', err);
     }
@@ -150,7 +149,7 @@ const App = ({ signOut, user }) => {
               <p style={{ width: '300px', overflowWrap: 'break-word' }}>
                 {selectedPhoto.name}
               </p>
-              <div onClick={() => setSelectedPhoto('')}>
+              <div onClick={() => setSelectedPhoto(null)}>
                 <MdDeleteOutline size="24px" />
               </div>
             </Flex>

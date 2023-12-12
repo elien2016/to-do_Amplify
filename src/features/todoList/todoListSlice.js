@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 
-import { listTodos } from '../../graphql/queries';
+import * as queries from '../../graphql/queries';
 
 export const todoListSlice = createSlice({
   name: 'todoList',
@@ -21,7 +21,7 @@ export const { todoListFetched } = todoListSlice.actions;
 
 export const fetchTodoList = () => async (dispatch) => {
   try {
-    const todoData = await API.graphql(graphqlOperation(listTodos));
+    const todoData = await API.graphql({ query: queries.listTodos });
     const todos = await Promise.all(
       todoData.data.listTodos.items.map(async (todo) => {
         if (todo.image) {
