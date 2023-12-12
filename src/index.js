@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import Subscription from './features/subscription/Subscription';
+import ErrorPage from './error-page';
 import reportWebVitals from './reportWebVitals';
 
 import { Provider } from 'react-redux';
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '/subscription',

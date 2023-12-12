@@ -17,7 +17,7 @@
         "reactamplified5bfb45d4": {
           "secretsPathAmplifyAppId": "d2l87u7wphmoqr",
           "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
-          "s3Key": "amplify-builds/reactamplified5bfb45d4-77345847484336596369-build.zip"
+          "s3Key": "amplify-builds/reactamplified5bfb45d4-50787641537974786d37-build.zip"
         },
         "reactamplifiedGetTodosubscriptionByEmail": {
           "deploymentBucketName": "amplify-reactamplified-dev-185717-deployment",
